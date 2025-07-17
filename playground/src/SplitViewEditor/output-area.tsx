@@ -1,6 +1,7 @@
 import type {TabsProps} from '@gravity-ui/uikit';
 
 import {Card, Tabs, TextArea} from '@gravity-ui/uikit';
+import {THEME, useThemeApp} from 'src/context/theme';
 
 export type OutputAreaProps = {
     handleSelectTab: (active: string) => void;
@@ -20,6 +21,8 @@ export function OutputArea(props: OutputAreaProps) {
         handleInputChange = () => undefined,
     } = props;
 
+    const {themeType} = useThemeApp();
+
     return (
         <div className="output">
             <div>
@@ -32,12 +35,16 @@ export function OutputArea(props: OutputAreaProps) {
             </div>
             <div>
                 {tabActive === 'preview' ? (
-                    <Card size="m" className="yfm area__yfm">
-                        <div
-                            dangerouslySetInnerHTML={{__html: output}}
-                            className="area__card"
-                        ></div>
-                    </Card>
+                    <div className={THEME[themeType]}>
+                        <Card size="m" className="yfm area__yfm">
+                            <div
+                                dangerouslySetInnerHTML={{
+                                    __html: output,
+                                }}
+                                className="area__card"
+                            />
+                        </Card>
+                    </div>
                 ) : (
                     <TextArea onUpdate={handleInputChange} value={output} size="l" />
                 )}

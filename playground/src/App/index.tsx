@@ -4,6 +4,8 @@ import PageConstructorEditor from 'src/PageConstructorEditor';
 import WYSIWYGEditor from 'src/WYSIWYGEditor';
 import Header from 'src/Header';
 import {PageConstructor, PageConstructorProvider} from '@gravity-ui/page-constructor';
+import {Button, useTheme} from '@gravity-ui/uikit';
+import {THEME_NAME, useThemeApp} from 'src/context/theme';
 
 import {restore} from '../utils';
 
@@ -46,11 +48,13 @@ const App = () => {
         })),
         initial: mode[urlMode] ? urlMode : EditorType.SPLIT,
     });
+    const {setTheme, themeType, setThemeType} = useThemeApp();
+    const theme = useTheme();
 
     return (
         <>
             {/* @ts-expect-error */}
-            <PageConstructorProvider theme={'light'}>
+            <PageConstructorProvider theme={theme}>
                 <PageConstructor
                     // @ts-expect-error
                     navigation={navigation}
@@ -72,6 +76,32 @@ const App = () => {
                                 </Playground>
                             ),
                         },
+                    }}
+                    renderMenu={() => {
+                        const click = () => {
+                            setTheme((x) => (x === 'light' ? 'dark' : 'light'));
+                        };
+
+                        const clickMainTheme = () => {
+                            setThemeType((x) => (x === 'default' ? 'diplodoc' : 'default'));
+                        };
+
+                        return (
+                            <div className="theme-section">
+                                <div>type theme: </div>
+                                <div>
+                                    <Button onClick={clickMainTheme}>
+                                        {THEME_NAME[themeType]}
+                                    </Button>
+                                </div>
+                                <div>theme:</div>
+                                <div>
+                                    <Button onClick={click}>
+                                        {theme === 'light' ? 'Light' : 'Dark'}
+                                    </Button>
+                                </div>
+                            </div>
+                        );
                     }}
                     content={{
                         blocks: [
